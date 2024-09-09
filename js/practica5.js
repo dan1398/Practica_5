@@ -14,7 +14,14 @@ seleccionado = null;
 function addColor() {
     var colorInput = document.getElementById("colorInput");
     var color = colorInput.value; 
-
+    if (color == "") {
+        Swal.fire({
+            title: 'Error',
+            text: 'Ingresa un color',
+            icon: 'error',
+        })
+        return;
+    }
     if (seleccionado == null) {
         colores.push(color);
     } else {
@@ -45,9 +52,27 @@ function cargarColores() {
     document.getElementById("colorList").innerHTML = cadena;
 }
 function borrarColor(posicion){
-    colores.splice(posicion, 1);
-    localStorage.setItem("colorIngresado", JSON.stringify(colores));
-    cargarColores();
+    Swal.fire({
+        title: 'Estas seguro?',
+        text: "No podras revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Eliminar!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            colores.splice(posicion, 1);
+            localStorage.setItem("colorIngresado", JSON.stringify(colores));
+            cargarColores();
+            Swal.fire({
+                title: 'Eliminado',
+                text: 'Se elimino el color',
+                icon: 'success',
+            });
+        }
+    })
+    
 }
 function editarColor(id){
     seleccionado = id;
